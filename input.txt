@@ -1,0 +1,13 @@
+Toyota Shell 180 50 Ivanov I.I. a123aa77
+BMW Liqumoly 150 40 Antonov A.A. c345cc99
+Audi BP 140 35 Zaitsev Z.Z. d456dd11
+Mercedes Shell 220 70 Kuznetsov K.K. e567ee22
+Hyundai Lukoil 90 40 Smirnov S.S. g789gg44
+Kia Gazprom 95 45 Ivanova I.I. h890hh55
+Volvo Shell 240 80 Sidorov S.S. i901ii66
+Scania BP 300 100 Fedorov F.F. j012jj77
+Lada Lukoil 75 35 Smirnov A.A. k123kk88
+Ford Liqumoly 160 50 Alexeev A.A. m345mm00
+Chevrolet BP 150 60 Vasilev V.V. n456nn11
+Mazda Liqumoly 200 70 Ivanov D.D. o567oo22
+Porche Shell 300 80 Antonov A.A. q789qq44
