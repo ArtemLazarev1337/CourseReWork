@@ -8,6 +8,8 @@ DIR_OBJ = ./obj/
 SRC = $(wildcard $(DIR_SRC)*.cpp)
 OBJ = $(patsubst $(DIR_SRC)%.cpp, $(DIR_OBJ)%.o, $(SRC))
 
+$(shell mkdir -p $(DIR_OBJ))
+
 $(TARGET): $(OBJ)
 	$(CC) $(CCFLAGS) $(OBJ) -o $(TARGET)
 
