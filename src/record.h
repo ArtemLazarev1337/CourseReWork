@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ostream>
 #include <string>
 
 struct Record {
@@ -10,3 +11,15 @@ struct Record {
     std::string ownerName;
     std::string carNumber;
 };
+
+std::ostream& operator<<(std::ostream& out, const Record& record) {
+    out << "{"
+        << record.carBrand << ", "
+        << record.fuelBrand << ", "
+        << record.enginePower << ", "
+        << record.tankCapacity << ", "
+        << record.ownerName << ", "
+        << record.carNumber
+        << "}";
+    return out;
+}

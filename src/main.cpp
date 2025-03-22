@@ -1,6 +1,8 @@
-#include "menu.cpp"
+#include <iostream>
+#include "menu.h"
 #include "record.h"
 #include "termfix.h"
+#include "dynarray.h"
 
 #define KEY_ARROW_UP 65
 #define KEY_ARROW_DOWN 66

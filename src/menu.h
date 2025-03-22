@@ -1,4 +1,6 @@
-#include "dynarray.cpp"
+#pragma once
+
+#include "dynarray.h"
 #include <fstream>
 #include <cstddef>
 #include <cstdlib>
