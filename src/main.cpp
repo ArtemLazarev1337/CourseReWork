@@ -1,4 +1,5 @@
 #include <iostream>
+#include "aggregated.h"
 #include "menu.h"
 #include "record.h"
 #include "termfix.h"
@@ -31,6 +32,8 @@ int main() {
     options.push_back("Числовая сортировка по объему бака автомобиля");
     options.push_back("Перечень марок автомобилей с указанием их числа (результат отсортирован по названию марки автомобиля в алфавитном порядке)");
     options.push_back("Поиск по фамилии владельца (результат отсортирован по маркам в алфавитном порядке)");
+    options.push_back("Проверка конструктора копирования");
+    options.push_back("Проверка операций присваивания и операций вывода");
     options.push_back("Завершить");
 
     // Запуск меню
@@ -42,7 +45,8 @@ int main() {
     int key;
     Menu menu(options);
     DynamicArray<Record> records;
-    menu.printMenu();
+    Aggregated aggregator(menu, records);
+    aggregator.menu.printMenu();
 
     disableBufferedInput();
 
@@ -50,21 +54,21 @@ int main() {
         key = getchar();
         switch (key) {
             case KEY_ARROW_UP:
-                menu.previousSelected();
-                menu.printMenu();
+                aggregator.menu.previousSelected();
+                aggregator.menu.printMenu();
                 break;
             case KEY_ARROW_DOWN:
-                menu.nextSelected();
-                menu.printMenu();
+                aggregator.menu.nextSelected();
+                aggregator.menu.printMenu();
                 break;
             case KEY_ENTER:
-                switch (menu.getSelected()) {
+                switch (aggregator.menu.getSelected()) {
                     case 1:  // Загрузка из файла
                         restoreBufferedInput();
                         std::cout << "\033[1mВведите имя файла для загрузки: \033[0m";
                         std::cin >> fileInput;
                         std::cin.ignore();
-                        menu.inputFromFile(records, fileInput);
+                        aggregator.menu.inputFromFile(aggregator.records, fileInput);
                         disableBufferedInput();
                         break;
                     case 2:  // Сохранение результатов обработки в файлах
@@ -72,20 +76,20 @@ int main() {
                         std::cout << "\033[1mВведите имя файла для сохранения: \033[0m";
                         std::cin >> fileOutput;
                         std::cin.ignore();
-                        menu.outputToFile(records, fileOutput);
+                        aggregator.menu.outputToFile(aggregator.records, fileOutput);
                         disableBufferedInput();
                         break;
                     case 3:  // Добавление записи
                         restoreBufferedInput();
-                        menu.addRecord(records);
+                        aggregator.menu.addRecord(aggregator.records);
                         std::cin.ignore();
                         disableBufferedInput();
                         break;
                     case 4:  // Удаление записи
-                        menu.removeRecord(records);
+                        aggregator.menu.removeRecord(aggregator.records);
                         break;
                     case 5:  // Вывод на экран дисплея данных и результатов обработки
-                        menu.printTable(records);
+                        aggregator.menu.printTable(aggregator.records);
                         break;
                     case 6:  // Алфавитная сортировка по фамилии
                         restoreBufferedInput();
@@ -93,10 +97,10 @@ int main() {
                         std::cin >> sortType;
                         std::cin.ignore();
                         if (sortType == 1) {
-                            menu.customSort(records, &Menu::compareByOwnerName, true);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByOwnerName, true);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else if (sortType == 2) {
-                            menu.customSort(records, &Menu::compareByOwnerName, false);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByOwnerName, false);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else {
                             std::cout << "\033[31mТакого варианта нет!\033[0m";
@@ -109,10 +113,10 @@ int main() {
                         std::cin >> sortType;
                         std::cin.ignore();
                         if (sortType == 1) {
-                            menu.customSort(records, &Menu::compareByCarBrandAndOwnerName, true);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByCarBrandAndOwnerName, true);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else if (sortType == 2) {
-                            menu.customSort(records, &Menu::compareByCarBrandAndOwnerName, false);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByCarBrandAndOwnerName, false);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else {
                             std::cout << "\033[31mТакого варианта нет!\033[0m";
@@ -125,10 +129,10 @@ int main() {
                         std::cin >> sortType;
                         std::cin.ignore();
                         if (sortType == 1) {
-                            menu.customSort(records, &Menu::compareByTankCapacity, true);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByTankCapacity, true);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else if (sortType == 2) {
-                            menu.customSort(records, &Menu::compareByTankCapacity, false);
+                            aggregator.menu.customSort(aggregator.records, &Menu::compareByTankCapacity, false);
                             std::cout << "\033[32mДанные успешно отсортированы!\033[0m\n";
                         } else {
                             std::cout << "\033[31mТакого варианта нет!\033[0m";
@@ -136,23 +140,43 @@ int main() {
                         disableBufferedInput();
                         break;
                     case 9:  // Перечень марок автомобилей с указанием их числа (результат отсортирован по названию марки автомобиля в алфавитном порядке)
-                        menu.printListOfBrands(records);
+                        printListOfBrands(aggregator.records);
                         break;
                     case 10:  // Поиск по фамилии владельца (результат отсортирован по маркам в алфавитном порядке)
                         restoreBufferedInput();
                         std::cout << "\033[1mВведите фамилию владельца автомобиля: \033[0m";
                         std::cin >> surname;
                         std::cin.ignore();
-                        menu.findByOwnerName(records, surname);
+                        findByOwnerName(aggregator.records, surname);
                         disableBufferedInput();
                         break;
-                    case 11:  // Завершить
+                    case 11: { // Проверка конструктора копирования агрегатного класса
+                        restoreBufferedInput();
+                        Aggregated copy(aggregator);
+
+                        std::cout << "Исходный:\n" << aggregator << std::endl << std::endl;
+                        std::cout << "Копия:\n" << copy << std::endl;
+                        disableBufferedInput();
+                        break;
+                    }
+                    case 12: { // Проверка операций присваивания и операций вывода агрегатного класса
+                        restoreBufferedInput();
+                        std::cout << "other = aggregator\n";
+                        Aggregated other = aggregator;
+
+                        std::cout << "После присваивания:\n";
+                        std::cout << "aggregator:\n" << aggregator << std::endl << std::endl;
+                        std::cout << "other:\n" << other << std::endl;
+                        disableBufferedInput();
+                        break;
+                    }
+                    case 13: // Завершить
                         isRunning = false;
                         break;
                 }
                 break;
             case KEY_BACKSPACE:
-                menu.printMenu();
+                aggregator.menu.printMenu();
                 break;
             case KEY_1:
             case KEY_2:
@@ -163,8 +187,8 @@ int main() {
             case KEY_7:
             case KEY_8:
             case KEY_9:
-                menu.setSelected(key - 48);
-                menu.printMenu();
+                aggregator.menu.setSelected(key - 48);
+                aggregator.menu.printMenu();
                 break;
         }
     }

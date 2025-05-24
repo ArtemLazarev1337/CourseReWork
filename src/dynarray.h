@@ -62,6 +62,10 @@ class DynamicArray {
             }
         }
 
+        T* getAddress() const {
+            return array;
+        }
+
         T& operator[](size_t i) const {
             return array[i];
         }
